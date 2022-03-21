@@ -8,12 +8,22 @@ public class ItemUpdates {
     private static int i = 0;
     private static final Connection con = DatabaseConnection.con;
 
+    private final String ADD = "INSERT INTO items (custID, price, `name`, `description`, `condition`)" +
+                                      "VALUES (?, ?, ?, ?, ?)";
+    private final String DELETE = "DELETE FROM items WHERE itemID = ?";
+    private final String OBTAIN_ALL_ITEMS = "SELECT * FROM items";
+    private final String OBTAIN_FAVOURITE_ITEMS = "SELECT itemID from favourite_items WHERE custID = ?";
+    private final String ADD_ITEM_TO_FAVOURITES = "INSERT INTO favourite_items (custID, itemID)" +
+                                                  "VALUES (?, ?)";
+    private final String MODIFY_ITEM = "UPDATE items " +
+                                       "SET price = ?, `name` = ?, `description` = ?, `condition` = ?" +
+                                       "WHERE itemID = ?";
+    private final String DELETE_FROM_FAVOURITES = "DELETE FROM favourite_items WHERE custID = ? AND itemID = ?";
+
     public boolean addItem(int userID, double price, String condition,
                                String name, String description) throws SQLException {
 
-        String query = "INSERT INTO items (custID, price, `name`, `description`, `condition`)" +
-                       "VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement preparedStatement = con.prepareStatement(query);
+        PreparedStatement preparedStatement = con.prepareStatement(ADD);
 
         preparedStatement.setInt(1, userID);
         preparedStatement.setDouble(2, price);
@@ -30,8 +40,7 @@ public class ItemUpdates {
 
         for (Item item : allItems) {
             if (item.itemID == itemID) {
-                String query = "DELETE FROM items WHERE itemID = ?";
-                PreparedStatement preparedStatement = con.prepareStatement(query);
+                PreparedStatement preparedStatement = con.prepareStatement(DELETE);
 
                 preparedStatement.setInt(1, itemID);
                 i = preparedStatement.executeUpdate();
@@ -62,9 +71,8 @@ public class ItemUpdates {
         double price;
         String condition, name, description;
 
-        String query = "SELECT * FROM items";
         Statement stmt = con.createStatement();
-        ResultSet result = stmt.executeQuery(query);
+        ResultSet result = stmt.executeQuery(OBTAIN_ALL_ITEMS);
 
         while (result.next()) {
             itemID = result.getInt(1);
@@ -90,9 +98,8 @@ public class ItemUpdates {
                     System.out.println("You can't add your item to favourites!");
                     return false;
                 } else {
-                    String query = "INSERT INTO favourite_items (custID, itemID)" +
-                                   "VALUES (?, ?);";
-                    PreparedStatement preparedStatement = con.prepareStatement(query);
+
+                    PreparedStatement preparedStatement = con.prepareStatement(ADD_ITEM_TO_FAVOURITES);
 
                     preparedStatement.setInt(1, customerID);
                     preparedStatement.setInt(2, itemIDToAdd);
@@ -106,11 +113,7 @@ public class ItemUpdates {
     public boolean modifyItem(int itemID, double price, String name,
                                   String description, String condition) throws SQLException {
 
-        String query = "UPDATE items " +
-                       "SET price = ?, `name` = ?, `description` = ?, `condition` = ?" +
-                       "WHERE itemID = ?";
-
-        PreparedStatement preparedStatement = con.prepareStatement(query);
+        PreparedStatement preparedStatement = con.prepareStatement(MODIFY_ITEM);
         preparedStatement.setDouble(1, price);
         preparedStatement.setString(2, name);
         preparedStatement.setString(3, description);
@@ -128,8 +131,7 @@ public class ItemUpdates {
         ArrayList<Item> allItems = obtainAllItems();
         ArrayList<Item> favouriteItems = new ArrayList<>();
 
-        String query = "SELECT itemID from favourite_items WHERE custID = ?";
-        PreparedStatement preparedStatement = con.prepareStatement(query);
+        PreparedStatement preparedStatement = con.prepareStatement(OBTAIN_FAVOURITE_ITEMS);
         preparedStatement.setInt(1, customerID);
         ResultSet result = preparedStatement.executeQuery();
 
@@ -163,8 +165,7 @@ public class ItemUpdates {
             throw new InvalidItemIDException();
         }
 
-        String query = "DELETE FROM favourite_items WHERE custID = ? AND itemID = ?";
-        PreparedStatement preparedStatement = con.prepareStatement(query);
+        PreparedStatement preparedStatement = con.prepareStatement(DELETE_FROM_FAVOURITES);
         preparedStatement.setInt(1, customerID);
         preparedStatement.setInt(2, itemID);
         int i = preparedStatement.executeUpdate();
