@@ -8,7 +8,7 @@ public class ItemUpdates {
     private static int i = 0;
     private static final Connection con = DatabaseConnection.con;
 
-    public static void addItem(int userID, double price, String condition,
+    public boolean addItem(int userID, double price, String condition,
                                String name, String description) throws SQLException {
 
         String query = "INSERT INTO items (custID, price, `name`, `description`, `condition`)" +
@@ -21,10 +21,10 @@ public class ItemUpdates {
         preparedStatement.setString(4, name);
         preparedStatement.setString(5, description);
 
-        preparedStatement.executeUpdate();
-
+        i = preparedStatement.executeUpdate();
+        return i > 0;
     }
-    public static boolean deleteItem(int itemID) throws SQLException, SQLIntegrityConstraintViolationException {
+    public boolean deleteItem(int itemID) throws SQLException, SQLIntegrityConstraintViolationException {
 
         ArrayList<Item> allItems = obtainAllItems();
 
@@ -42,7 +42,7 @@ public class ItemUpdates {
 
         return false;
     }
-    public static ArrayList<Item> obtainUserItems(int customerID) throws SQLException {
+    public ArrayList<Item> obtainUserItems(int customerID) throws SQLException {
         ArrayList<Item> allItems = obtainAllItems();
         ArrayList<Item> userItems = new ArrayList<>();
 
@@ -54,7 +54,7 @@ public class ItemUpdates {
 
         return userItems;
     }
-    public static ArrayList<Item> obtainAllItems() throws SQLException {
+    public ArrayList<Item> obtainAllItems() throws SQLException {
         ArrayList<Item> allItems = new ArrayList<>();
 
         int customerID;
@@ -79,7 +79,7 @@ public class ItemUpdates {
 
         return allItems;
     }
-    public static boolean addItemToFavourites(int itemIDToAdd, int customerID)
+    public boolean addItemToFavourites(int itemIDToAdd, int customerID)
                                                       throws SQLException {
 
         ArrayList<Item> allItems = obtainAllItems();
@@ -103,7 +103,7 @@ public class ItemUpdates {
         }
         return true;
     }
-    public static boolean modifyItem(int itemID, double price, String name,
+    public boolean modifyItem(int itemID, double price, String name,
                                   String description, String condition) throws SQLException {
 
         String query = "UPDATE items " +
@@ -122,7 +122,7 @@ public class ItemUpdates {
         return i > 0;
 
     }
-    public static ArrayList<Item> obtainFavouriteItems(int customerID) throws SQLException {
+    public ArrayList<Item> obtainFavouriteItems(int customerID) throws SQLException {
 
         ArrayList<Integer> favouriteItemsIDs = new ArrayList<>();
         ArrayList<Item> allItems = obtainAllItems();
@@ -147,7 +147,7 @@ public class ItemUpdates {
 
         return favouriteItems;
     }
-    public static boolean removeFromFavourites(int itemID, int customerID) throws SQLException, InvalidItemIDException {
+    public boolean removeFromFavourites(int itemID, int customerID) throws SQLException, InvalidItemIDException {
 
         int flag = 0;
         ArrayList<Item> favouriteItems = obtainFavouriteItems(customerID);

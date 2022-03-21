@@ -39,10 +39,4 @@ public class UserUpdates {
         pstmt.executeUpdate();
     }
 
-    public void deleteUser() {
-
-    }
-    public void resetPassword() {
-
-    }
 }

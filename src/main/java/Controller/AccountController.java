@@ -14,6 +14,8 @@ public class AccountController {
     public static int userIndex, userID;
     private static final Scanner scanner = new Scanner(System.in);
 
+    private static final ItemUpdates itemUpdates = new ItemUpdates();
+
     public static void signUp(String firstName, String lastName, String email, String password) {
         try {
             UserUpdates.addUser(firstName, lastName, email, password);
@@ -41,7 +43,7 @@ public class AccountController {
 
         return accountExists;
     }
-    public static void addItem() throws SQLException {
+    public static boolean addItem() throws SQLException {
         double price;
         String condition, name, description;
 
@@ -54,27 +56,27 @@ public class AccountController {
         System.out.print("Price: ");
         price = scanner.nextDouble();
 
-        ItemUpdates.addItem(userID, price, condition, name, description);
+        return itemUpdates.addItem(userID, price, condition, name, description);
     }
     public static boolean deleteItem(int itemID) throws SQLException, SQLIntegrityConstraintViolationException {
-        return ItemUpdates.deleteItem(itemID);
+        return itemUpdates.deleteItem(itemID);
     }
     public static ArrayList<Item> obtainUserItems() throws SQLException {
-        return ItemUpdates.obtainUserItems(userID);
+        return itemUpdates.obtainUserItems(userID);
     }
     public static ArrayList<Item> obtainAllItems() throws SQLException {
-        return ItemUpdates.obtainAllItems();
+        return itemUpdates.obtainAllItems();
     }
     public static boolean addItemToFavourites(int itemIDtoAdd) throws SQLException {
-        return ItemUpdates.addItemToFavourites(itemIDtoAdd, userID);
+        return itemUpdates.addItemToFavourites(itemIDtoAdd, userID);
     }
     public static boolean modifyItem(int itemID, double price, String name, String description, String condition) throws SQLException {
-        return ItemUpdates.modifyItem(itemID, price, name, description, condition);
+        return itemUpdates.modifyItem(itemID, price, name, description, condition);
     }
     public static ArrayList<Item> obtainFavouriteItems() throws SQLException {
-        return ItemUpdates.obtainFavouriteItems(userID);
+        return itemUpdates.obtainFavouriteItems(userID);
     }
     public static boolean removeFavouriteItem(int itemID) throws SQLException, InvalidItemIDException {
-        return ItemUpdates.removeFromFavourites(itemID, userID);
+        return itemUpdates.removeFromFavourites(itemID, userID);
     }
 }

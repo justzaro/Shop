@@ -2,6 +2,8 @@ package View;
 
 import Controller.InvalidOptionException;
 import Model.DatabaseConnection;
+import Model.Item;
+import Model.ItemUpdates;
 import Model.UserUpdates;
 import java.sql.*;
 import java.util.Scanner;
@@ -9,8 +11,10 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) throws SQLException {
         int option;
+        
         DatabaseConnection.establishConnection();
         UserUpdates.obtainUsers();
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Shop!");
         System.out.print("Enter 1 to log in or 2 to sign up:\n> ");

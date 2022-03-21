@@ -10,8 +10,10 @@ import java.util.Scanner;
 
 public class ProfileMenu {
     static final Scanner scanner = new Scanner(System.in);
+
     public static void profileOptions() throws SQLException {
         int option;
+
         while (true) {
             System.out.println();
             System.out.println("1. Add item");
@@ -24,22 +26,37 @@ public class ProfileMenu {
             System.out.print("Option: ");
             option = scanner.nextInt();
 
-            if (option == 1) {
-                AccountController.addItem();
-                System.out.println("Item added!");
-            } else if (option == 2) {
-                deleteItem();
-            } else if (option == 3) {
-                showUserItems();
-            } else if (option == 4) {
-                modifyItem();
-            } else if (option == 5) {
-                showFavouriteItems();
-            } else if (option == 6) {
-                showAllItems();
-            } else if (option == 7) {
-                return;
+            switch (option) {
+                case 1:
+                    addItem();
+                    break;
+                case 2:
+                    deleteItem();
+                    break;
+                case 3:
+                    showUserItems();
+                    break;
+                case 4:
+                    modifyItem();
+                    break;
+                case 5:
+                    showFavouriteItems();
+                    break;
+                case 6:
+                    showAllItems();
+                    break;
+                case 7:
+                    return;
             }
+        }
+    }
+    public static void addItem() throws SQLException {
+        boolean result = AccountController.addItem();
+
+        if (result) {
+            System.out.println("Item added!");
+        } else {
+            System.out.println("Error could not be added!");
         }
     }
     public static void deleteItem() throws SQLException {
