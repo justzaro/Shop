@@ -11,22 +11,23 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AccountController {
-    public static int userIndex, userID;
     private static final Scanner scanner = new Scanner(System.in);
 
-    private static final ItemUpdates itemUpdates = new ItemUpdates();
+    public static int userIndex, userID;
+    public static final ItemUpdates itemUpdates = new ItemUpdates();
+    public static final UserUpdates userUpdates = new UserUpdates();
 
     public static void signUp(String firstName, String lastName, String email, String password) {
         try {
-            UserUpdates.addUser(firstName, lastName, email, password);
-            UserUpdates.obtainUsers();
+            userUpdates.addUser(firstName, lastName, email, password);
+            userUpdates.obtainUsers();
             System.out.println("Successful registration!");
         } catch (InputMismatchException | SQLException e) {
             e.printStackTrace();
         }
     }
     public static boolean logIn(String email, String password) {
-        ArrayList<User> users = UserUpdates.users;
+        ArrayList<User> users = userUpdates.users;
 
         int i = 0;
         boolean accountExists = false;

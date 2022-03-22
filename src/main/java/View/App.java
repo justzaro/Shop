@@ -1,19 +1,22 @@
 package View;
 
+import Controller.AccountController;
 import Controller.InvalidOptionException;
 import Model.DatabaseConnection;
-import Model.Item;
-import Model.ItemUpdates;
-import Model.UserUpdates;
 import java.sql.*;
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws SQLException {
+
+        String URL = args[0];
+        String username = args[1];
+        String password = args[2];
+
+        DatabaseConnection.establishConnection(URL, username, password);
+        AccountController.userUpdates.obtainUsers();
+
         int option;
-        
-        DatabaseConnection.establishConnection();
-        UserUpdates.obtainUsers();
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to Shop!");

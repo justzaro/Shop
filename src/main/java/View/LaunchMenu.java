@@ -37,7 +37,7 @@ public class LaunchMenu {
             logInMenu();
         } else {
             int userIndex = AccountController.userIndex;
-            String loggedInUser = UserUpdates.users.get(userIndex).getFirstName();
+            String loggedInUser = AccountController.userUpdates.users.get(userIndex).getFirstName();
             System.out.println("\nSuccessful log in!");
             System.out.printf("Welcome back, %s!", loggedInUser);
         }

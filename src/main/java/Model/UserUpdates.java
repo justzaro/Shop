@@ -4,13 +4,16 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class UserUpdates {
-    public static ArrayList<User> users = new ArrayList<>();
+    public ArrayList<User> users = new ArrayList<>();
     private static final Connection con = DatabaseConnection.con;
 
-    public static void obtainUsers() throws SQLException {
-        String query = "SELECT * FROM clients";
+    private final String OBTAIN_USERS = "SELECT * FROM clients";
+    private final String INSERT_INTO_CLIENTS = "INSERT INTO clients (first_name, last_name, email, password)" +
+                                               "VALUES (?, ?, ?, ?)";
+
+    public void obtainUsers() throws SQLException {
         Statement stmt = con.createStatement();
-        ResultSet output = stmt.executeQuery(query);
+        ResultSet output = stmt.executeQuery(OBTAIN_USERS);
 
         while (output.next()) {
             int userID = output.getInt(1);
@@ -23,13 +26,10 @@ public class UserUpdates {
             users.add(user);
         }
     }
-    public static void addUser(String firstName, String lastName, String email,
+    public void addUser(String firstName, String lastName, String email,
                         String password) throws SQLException {
 
-        String rawQuery = "INSERT INTO clients (first_name, last_name, email, password)" +
-                          "VALUES (?, ?, ?, ?)";
-
-        PreparedStatement pstmt = con.prepareStatement(rawQuery);
+        PreparedStatement pstmt = con.prepareStatement(INSERT_INTO_CLIENTS);
 
         pstmt.setString(1, firstName);
         pstmt.setString(2, lastName);
